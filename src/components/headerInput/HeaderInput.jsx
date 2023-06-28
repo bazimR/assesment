@@ -32,7 +32,6 @@ const HeaderInput = () => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
-      console.log(values);
       dispatch(setHeader(values));
       dispatch(setHeaderToggle(false));
     },

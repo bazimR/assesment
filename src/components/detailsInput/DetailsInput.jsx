@@ -1,14 +1,15 @@
 import { Grid, Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setDetails, setDetailsToggle } from "../../redux/formSlice";
 import { DetailsValidation } from "../../helper/validate";
 const DetailsInput = () => {
+  const { vr_no } = useSelector((state) => state.form.headerDetails);
   const dispatch = useDispatch();
-
   const formik = useFormik({
     initialValues: {
+      vr_no: vr_no,
       item_name: "",
       item_code: "",
       description: "",
@@ -20,7 +21,6 @@ const DetailsInput = () => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
-      console.log(values);
       dispatch(setDetails(values));
       dispatch(setDetailsToggle(false));
     },
@@ -177,7 +177,9 @@ const DetailsInput = () => {
               }}
             >
               <Button
-                onClick={()=>{formik.handleSubmit()}}
+                onClick={() => {
+                  formik.handleSubmit();
+                }}
                 variant="contained"
                 disableElevation
                 sx={{ width: "10em" }}

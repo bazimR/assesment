@@ -6,14 +6,18 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import DisplayDetails from "../../components/displayDetails/DisplayDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailsToggle, setHeaderToggle } from "../../redux/formSlice";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { useRef } from "react";
+import { saveDetails } from "../../helper/helper";
 
 const EntryPage = () => {
   const componentRef = useRef();
   const isToggle = useSelector((state) => state.form.headerToggle);
   const headerDetails = useSelector((state) => state.form.headerDetails);
   const isDetailsToggle = useSelector((state) => state.form.detailToggle);
+  const detailsTable = useSelector((state) => state.form.detailsTable);
+  const AC_AMT = useSelector((state) => state.form.total);
+
   const dispatch = useDispatch();
   const handleHeader = () => {
     dispatch(setHeaderToggle(!isToggle));
@@ -24,20 +28,35 @@ const EntryPage = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const handleSave = () => {
+    if (detailsTable.length > 0) {
+      const headerTable = { ...headerDetails, ac_amt: AC_AMT };
+      const data = {
+        header_table: headerTable,
+        detail_table: detailsTable,
+      };
+      saveDetails(JSON.stringify(data));
+    } else {
+      toast.error("please fill details table");
+    }
+  };
   return (
     <Grid
       sx={{
         width: "100vw",
-        height: "100vh",
+        height: "100%",
+        overflow:'auto',
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
+        
       }}
     >
       <Toaster position="top-center" />
 
       <Box sx={{ padding: 10 }}>
-        <Grid container direction={"column"}>
+        <Grid container direction={"column"} sx={{ backgroundColor: "white" }}>
           <Grid
             item
             sx={{
@@ -45,7 +64,7 @@ const EntryPage = () => {
               justifyContent: "flex-start",
               alignItems: "center",
               padding: 2,
-              backgroundColor: "lightblue",
+              backgroundColor: "#74b9ff",
             }}
           >
             <Typography sx={{ fontSize: "18px", fontWeight: 450 }}>
@@ -54,7 +73,8 @@ const EntryPage = () => {
             <Button
               onClick={handleHeader}
               size="small"
-              variant="text"
+              disableElevation
+              variant="contained"
               sx={{ marginLeft: "auto" }}
             >
               header form
@@ -66,8 +86,7 @@ const EntryPage = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              borderLeft: 1,
-              borderRight: 1,
+
               borderColor: "#c9c9c9",
             }}
           >
@@ -80,7 +99,7 @@ const EntryPage = () => {
               justifyContent: "flex-start",
               alignItems: "center",
               padding: 2,
-              backgroundColor: "lightblue",
+              backgroundColor: "#74b9ff",
             }}
           >
             <Typography sx={{ fontSize: "18px", fontWeight: 450 }}>
@@ -93,10 +112,12 @@ const EntryPage = () => {
               aria-label="outlined button group"
             >
               <Button disabled={!headerDetails} onClick={handleDetails}>
-                new details
+                insert
               </Button>
-              <Button  disabled={!headerDetails} onClick={handlePrint}  >print</Button>
-              <Button>save</Button>
+              <Button disabled={!headerDetails} onClick={handlePrint}>
+                print
+              </Button>
+              <Button onClick={handleSave}>save</Button>
             </ButtonGroup>
           </Grid>
           <Grid
@@ -105,17 +126,21 @@ const EntryPage = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              borderLeft: 1,
-              borderRight: 1,
+
               borderColor: "#c9c9c9",
             }}
           >
             {isDetailsToggle && <DetailsInput />}
           </Grid>
-          <Grid item sx={{ display: "flex", flexDirection: "row" }}>
-            <ReactToPrint
-              content={() => componentRef.current}
-            />
+          <Grid
+            item
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              backgroundColor: "white",
+            }}
+          >
+            <ReactToPrint content={() => componentRef.current} />
             <div ref={componentRef}>
               <DisplayDetails />
             </div>

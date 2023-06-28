@@ -1,6 +1,6 @@
 import {
+  Box,
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -37,8 +37,8 @@ const DisplayDetails = forwardRef(() => {
   }, [detailsTable, dispatch]);
   return (
     <>
-      <Typography variant="h6" sx={{textAlign:'center'}} color="initial">Sale Details</Typography>
-    <TableContainer component={Paper} sx={{ borderRadius: 0 }}>
+      <Typography variant="h6" sx={{textAlign:'center'}} color="initial">Sale Detail</Typography>
+    <TableContainer  component={Box} sx={{ borderRadius: 0 }}>
       <Table sx={{ minWidth: 750 }} aria-label="simple table">
         <TableHead>
           <TableRow>
