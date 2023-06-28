@@ -4,10 +4,10 @@ import "./styles/app.module.css";
 
 function App() {
   return (
-    <>
+    <main>
       <Navbar />
       <EntryPage />
-    </>
+    </main>
   );
 }
 
