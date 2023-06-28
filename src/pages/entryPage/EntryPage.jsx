@@ -31,6 +31,7 @@ const EntryPage = () => {
 
   const handleSave = () => {
     if (detailsTable.length > 0) {
+      
       const headerTable = { ...headerDetails, ac_amt: AC_AMT };
       const data = {
         header_table: headerTable,
