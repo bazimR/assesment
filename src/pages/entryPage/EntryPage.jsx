@@ -31,13 +31,15 @@ const EntryPage = () => {
 
   const handleSave = () => {
     if (detailsTable.length > 0) {
-      
       const headerTable = { ...headerDetails, ac_amt: AC_AMT };
       const data = {
         header_table: headerTable,
         detail_table: detailsTable,
       };
-      saveDetails(JSON.stringify(data));
+      saveDetails(JSON.stringify(data)).catch(() => {
+      toast.error("saving failed, please try again");
+        
+      })
     } else {
       toast.error("please fill details table");
     }
