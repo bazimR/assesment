@@ -1,14 +1,16 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import HeaderInput from "../../components/headerInput/HeaderInput";
 import DetailsInput from "../../components/detailsInput/DetailsInput";
-
-import DisplayHeader from "../../components/displayDetails/DisplayDetails";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
+import DisplayDetails from "../../components/displayDetails/DisplayDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailsToggle, setHeaderToggle } from "../../redux/formSlice";
 import { Toaster } from "react-hot-toast";
+import { useRef } from "react";
 
 const EntryPage = () => {
+  const componentRef = useRef();
   const isToggle = useSelector((state) => state.form.headerToggle);
   const headerDetails = useSelector((state) => state.form.headerDetails);
   const isDetailsToggle = useSelector((state) => state.form.detailToggle);
@@ -19,6 +21,9 @@ const EntryPage = () => {
   const handleDetails = () => {
     dispatch(setDetailsToggle(!isDetailsToggle));
   };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   return (
     <Grid
       sx={{
@@ -39,18 +44,20 @@ const EntryPage = () => {
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "center",
-              padding: 1,
+              padding: 2,
               backgroundColor: "lightblue",
             }}
           >
-            <Typography>Header Table</Typography>
+            <Typography sx={{ fontSize: "18px", fontWeight: 450 }}>
+              Header Table
+            </Typography>
             <Button
               onClick={handleHeader}
-              variant="contained"
-              dir=""
+              size="small"
+              variant="text"
               sx={{ marginLeft: "auto" }}
             >
-              Toggle header form
+              header form
             </Button>
           </Grid>
           <Grid
@@ -72,20 +79,25 @@ const EntryPage = () => {
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "center",
-              padding: 1,
+              padding: 2,
               backgroundColor: "lightblue",
             }}
           >
-            <Typography>Details Table</Typography>
-            <Button
-              disabled={!headerDetails}
-              onClick={handleDetails}
-              variant="contained"
-              dir=""
+            <Typography sx={{ fontSize: "18px", fontWeight: 450 }}>
+              Details Table
+            </Typography>
+            <ButtonGroup
               sx={{ marginLeft: "auto" }}
+              variant="contained"
+              disableElevation
+              aria-label="outlined button group"
             >
-              Add details
-            </Button>
+              <Button disabled={!headerDetails} onClick={handleDetails}>
+                new details
+              </Button>
+              <Button  disabled={!headerDetails} onClick={handlePrint}  >print</Button>
+              <Button>save</Button>
+            </ButtonGroup>
           </Grid>
           <Grid
             item
@@ -100,8 +112,13 @@ const EntryPage = () => {
           >
             {isDetailsToggle && <DetailsInput />}
           </Grid>
-          <Grid item>
-            <DisplayHeader />
+          <Grid item sx={{ display: "flex", flexDirection: "row" }}>
+            <ReactToPrint
+              content={() => componentRef.current}
+            />
+            <div ref={componentRef}>
+              <DisplayDetails />
+            </div>
           </Grid>
         </Grid>
       </Box>
