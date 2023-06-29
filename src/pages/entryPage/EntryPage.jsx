@@ -57,7 +57,6 @@ const EntryPage = () => {
       toast.error("please fill details table");
     }
   };
-  console.log(detailsTable.length);
   return (
     <Grid
       sx={{

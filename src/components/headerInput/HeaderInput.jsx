@@ -15,7 +15,6 @@ import { setHeader, setHeaderToggle } from "../../redux/formSlice";
 import { headerDetailsValidation } from "../../helper/validate";
 const HeaderInput = () => {
   const headerDetails = useSelector((state) => state.form.headerDetails);
-  // console.log(headerDetails);
   const dispatch = useDispatch();
   const [status, setStatus] = useState("");
   const handleChange = (e) => {
