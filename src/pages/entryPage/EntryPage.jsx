@@ -70,7 +70,7 @@ const EntryPage = () => {
     >
       <Toaster position="top-center" />
 
-      <Box sx={{ padding: 10 }}>
+      <Box sx={{ paddingY: 5 }}>
         <Grid container direction={"column"} sx={{ backgroundColor: "white" }}>
           <Grid
             item
