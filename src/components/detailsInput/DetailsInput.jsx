@@ -26,7 +26,7 @@ const DetailsInput = () => {
     },
   });
   return (
-    <Grid>
+    <Grid item>
       <Box
         sx={{
           width: {
