@@ -23,12 +23,26 @@ const EntryPage = () => {
     dispatch(setHeaderToggle(!isToggle));
   };
   const handleDetails = () => {
-    dispatch(setDetailsToggle(!isDetailsToggle));
+    if (!headerDetails) {
+      toast.error("please fill out header tab");
+      dispatch(setHeaderToggle(true));
+    } else {
+      dispatch(setDetailsToggle(!isDetailsToggle));
+    }
   };
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
+  const warnPrint = () => {
+    if (!headerDetails) {
+      toast.error("please fill out header tab");
+      dispatch(setHeaderToggle(true));
+    }
+    else if (detailsTable.length === 0) {
+      toast.error("please fill out details tab");
+      dispatch(setDetailsToggle(true));
+    }
+  };
   const handleSave = () => {
     if (detailsTable.length > 0) {
       const headerTable = { ...headerDetails, ac_amt: AC_AMT };
@@ -37,23 +51,22 @@ const EntryPage = () => {
         detail_table: detailsTable,
       };
       saveDetails(JSON.stringify(data)).catch(() => {
-      toast.error("saving failed, please try again");
-        
-      })
+        toast.error("saving failed, please try again");
+      });
     } else {
       toast.error("please fill details table");
     }
   };
+  console.log(detailsTable.length);
   return (
     <Grid
       sx={{
         width: "100vw",
         height: "100%",
-        overflow:'auto',
+        overflow: "auto",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
-        
       }}
     >
       <Toaster position="top-center" />
@@ -114,10 +127,12 @@ const EntryPage = () => {
               disableElevation
               aria-label="outlined button group"
             >
-              <Button disabled={!headerDetails} onClick={handleDetails}>
-                insert
-              </Button>
-              <Button disabled={!headerDetails} onClick={handlePrint}>
+              <Button onClick={handleDetails}>insert</Button>
+              <Button
+                onClick={() => {
+                  detailsTable.length ? handlePrint() : warnPrint();
+                }}
+              >
                 print
               </Button>
               <Button onClick={handleSave}>save</Button>
